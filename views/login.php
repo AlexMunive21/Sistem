@@ -18,7 +18,7 @@ $error = $_GET['error'] ?? null;
     <style>
         body {
             min-height: 100vh;
-            background: linear-gradient(135deg, #1f1c2c, #928DAB);
+            background: linear-gradient(135deg,rgb(0, 0, 0),rgb(126, 126, 126));
             display: flex;
             align-items: center;
             justify-content: center;
@@ -48,7 +48,7 @@ $error = $_GET['error'] ?? null;
         }
 
         .btn-login {
-            background-color: #6f42c1;
+            background-color:rgb(160, 159, 163);
             color: #fff;
             border-radius: 12px;
             padding: 12px;
@@ -57,7 +57,7 @@ $error = $_GET['error'] ?? null;
         }
 
         .btn-login:hover {
-            background-color: #5936a1;
+            background-color:rgb(114, 111, 121);
         }
 
         @keyframes fadeIn {
