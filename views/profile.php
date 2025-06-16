@@ -32,6 +32,23 @@ $user = $_SESSION['user'];
         .form-label {
             font-weight: bold;
         }
+        body.dark-mode {
+        background-color: #121212 !important;
+        color: #f1f1f1 !important;
+        }
+        .dark-mode .card, 
+        .dark-mode .table,
+        .dark-mode .form-control {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+            border-color: #333 !important;
+        }
+        .dark-mode .table thead {
+            background-color: #2c2c2c !important;
+        }
+        .toggle-theme {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-light d-flex">
@@ -46,6 +63,10 @@ $user = $_SESSION['user'];
         <a href="users.php"><i class="bi bi-people-fill"></i> Usuarios</a>
     <?php endif; ?>
     <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+    <div class="form-check form-switch text-white mt-auto mx-2">
+        <input class="form-check-input" type="checkbox" id="themeSwitch">
+        <label class="form-check-label" for="themeSwitch">Modo oscuro</label>
+    </div>
 </div>
 
 <!-- Main Content -->
@@ -55,7 +76,7 @@ $user = $_SESSION['user'];
     <div class="card shadow p-4">
         <form action="../controllers/profile.php" method="POST" enctype="multipart/form-data">
             <div class="text-center mb-4">
-                <img src="../uploads/<?php echo $user['photo'] ?: 'default.png'; ?>" alt="Foto" class="rounded-circle border" width="130" height="130">
+                <img src="../uploads/<?= htmlspecialchars($_SESSION['user']['photo'] ?? 'default-profile.png') ?>" alt="Tu foto" />
                 <h5 class="mt-3"><?php echo htmlspecialchars($user['name']); ?></h5>
             </div>
 
@@ -85,6 +106,26 @@ $user = $_SESSION['user'];
         </form>
     </div>
 </div>
+
+<script>
+    // Aplicar modo desde localStorage al cargar
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeSwitch').checked = true;
+    }
+
+    // Toggle de modo oscuro/claro
+    document.getElementById('themeSwitch').addEventListener('change', function () {
+        if (this.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
+    });
+</script>
+
 
 </body>
 </html>

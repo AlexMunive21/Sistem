@@ -40,6 +40,23 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
         .sidebar a:hover {
             background-color: #495057;
         }
+        body.dark-mode {
+        background-color: #121212 !important;
+        color: #f1f1f1 !important;
+        }
+        .dark-mode .card, 
+        .dark-mode .table,
+        .dark-mode .form-control {
+            background-color: #1e1e1e !important;
+            color: #f1f1f1 !important;
+            border-color: #333 !important;
+        }
+        .dark-mode .table thead {
+            background-color: #2c2c2c !important;
+        }
+        .toggle-theme {
+            cursor: pointer;
+        }
     </style>
 </head>
 <body class="bg-light d-flex">
@@ -52,6 +69,11 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <a href="chat_users.php"><i class="bi bi-chat-dots-fill"></i> Chat</a>
     <a href="users.php"><i class="bi bi-people-fill"></i> Usuarios</a>
     <a href="logout.php"><i class="bi bi-box-arrow-right"></i> Cerrar sesión</a>
+    <div class="form-check form-switch text-white mt-auto mx-2">
+        <input class="form-check-input" type="checkbox" id="themeSwitch">
+        <label class="form-check-label" for="themeSwitch">Modo oscuro</label>
+    </div>
+
 </div>
 
 <!-- Main Content -->
@@ -166,6 +188,22 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 zeroRecords: "No se encontraron usuarios"
             }
         });
+    });
+    // Aplicar modo desde localStorage al cargar
+    if (localStorage.getItem('theme') === 'dark') {
+        document.body.classList.add('dark-mode');
+        document.getElementById('themeSwitch').checked = true;
+    }
+
+    // Toggle de modo oscuro/claro
+    document.getElementById('themeSwitch').addEventListener('change', function () {
+        if (this.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('theme', 'dark');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('theme', 'light');
+        }
     });
 </script>
 
