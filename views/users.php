@@ -1,10 +1,21 @@
 <?php
 session_start();
-if (!isset($_SESSION['user']) || $_SESSION['user']['role'] !== 'admin') {
+if (!isset($_SESSION['user'])) {
     header("Location: login.php");
     exit;
 }
+
+$user = $_SESSION['user'];
+
+// Solo permitir acceso a administradores
+if ($user['role'] != '1') {
+    echo "Acceso denegado.";
+    exit;
+}
+
 require_once '../config/db.php';
+
+$user = $_SESSION['user'];
 
 $stmt = $pdo->query("SELECT * FROM users");
 $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -26,7 +37,12 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <table class="table table-bordered">
         <thead>
             <tr>
-                <th>ID</th><th>Nombre</th><th>Email</th><th>Rol</th><th>Acciones</th>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Rol</th>
+                <th>Estado</th>
+                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -37,9 +53,24 @@ $users = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?= $u['email'] ?></td>
                 <td><?= $u['role'] ?></td>
                 <td>
+                    <?php if ($u['status'] == 1): ?>
+                        <span class="badge bg-success">Activo</span>
+                    <?php else: ?>
+                        <span class="badge bg-danger">Inactivo</span>
+                    <?php endif; ?>
+                
+                    <?php if ($u['status'] == 1): ?>
+                        <a href="../controllers/toggle_status.php?id=<?= $u['id'] ?>&status=0" class="btn btn-sm btn-warning">Desactivar</a>
+                    <?php else: ?>
+                        <a href="../controllers/toggle_status.php?id=<?= $u['id'] ?>&status=1" class="btn btn-sm btn-success">Activar</a>
+                    <?php endif; ?>
+                </td>
+
+                <td>
                     <a href="edit_user.php?id=<?= $u['id'] ?>" class="btn btn-sm btn-primary">Editar</a>
                     <a href="../controllers/delete_user.php?id=<?= $u['id'] ?>" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar usuario?')">Eliminar</a>
                 </td>
+
             </tr>
             <?php endforeach; ?>
         </tbody>

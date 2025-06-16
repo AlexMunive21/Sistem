@@ -31,19 +31,3 @@
 
 </body>
 </html>
-
-<script>
-    // Modo oscuro
-    const darkModeToggle = document.getElementById('darkModeToggle');
-    const body = document.body;
-
-    darkModeToggle.addEventListener('change', () => {
-        body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
-    });
-
-    // Cargar estado del modo oscuro desde localStorage
-    if (localStorage.getItem('darkMode') === 'true') {
-        body.classList.add('dark-mode');
-        darkModeToggle.checked = true;
-    }   

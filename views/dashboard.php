@@ -5,6 +5,8 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
+$user = $_SESSION['user'];
+
 require_once '../config/db.php';
 
 $user = $_SESSION['user'];
@@ -30,7 +32,7 @@ foreach ($data as $row) {
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Dashboard | ERP</title>
+    <title>Dashboard</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body.dark-mode {
@@ -66,11 +68,11 @@ foreach ($data as $row) {
         <h4 class="text-white text-center">ERP</h4>
         <a href="dashboard.php">🏠 Dashboard</a>
         <a href="profile.php">🙋‍♂️ Perfil</a>
-        
-        <?php if ($user['role'] === 'admin'): ?>
-            <a href="users.php">👥 Usuarios activos</a>
-            <a href="users_inactivos.php">🛑 Usuarios inactivos</a>
+        <a href="chat_users.php"> Chat</a>
+        <?php if ($user['role'] == 1): ?>
+            <a href="users.php">📋 Todos los usuarios</a>
         <?php endif; ?>
+
 
         
         <a href="logout.php">🚪 Cerrar sesión</a>
@@ -87,15 +89,9 @@ foreach ($data as $row) {
         <h2>Bienvenido, <?php echo $user['name']; ?>!</h2>
         <p>Rol: <?php echo $user['role']; ?></p>
 
+        
+
         <div class="row mt-4">
-            <div class="col-md-4">
-                <div class="card shadow-sm">
-                    <div class="card-body">
-                        <h5 class="card-title">🔔 Notificaciones</h5>
-                        <p class="card-text">Próximamente...</p>
-                    </div>
-                </div>
-            </div>
             <div class="col-md-4">
                 <div class="card shadow-sm">
                     <div class="card-body">
@@ -123,7 +119,17 @@ foreach ($data as $row) {
             </div>
         </div>
     </div>
+    <!-- Notificaciones -->
+    <div class="position-relative mb-3">
+        <button id="notificationBtn" class="btn btn-light position-relative">
+            🔔 Notificaciones
+            <span id="notifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none">
+                0
+            </span>
+        </button>
+    </div>
 </div>
+
 
 <!-- JS Bootstrap + Dark Mode Logic -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
