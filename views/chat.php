@@ -25,7 +25,7 @@ $messages = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body class="p-4 bg-light">
 
-<h4>Chat con usuario ID <?= $receiver_id ?></h4>
+<h4>Chat con <?= $receiver_id ?></h4> //Nombre de la persona con la que estás chateando
 
 <div id="chatBox" style="height: 400px; overflow-y: scroll;" class="border p-2 bg-white mb-3">
     <?php foreach ($messages as $msg): ?>

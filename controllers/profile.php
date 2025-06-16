@@ -1,33 +1,35 @@
 <?php
+ob_start();
 session_start();
 require_once '../config/db.php';
 
 if (!isset($_SESSION['user'])) {
-    header("Location: ../views/login.php");
+    header("Location: ../login.php");
     exit;
 }
 
-$id = $_SESSION['user']['id'];
-$name = $_POST['name'];
-$email = $_POST['email'];
+$user = $_SESSION['user'];
+$name = $_POST['name'] ?? '';
+$email = $_POST['email'] ?? '';
+$lastName = $_POST['last_name'] ?? ''; // asegúrate de tener este campo en el formulario si lo usas
 
-// Manejo de imagen
-$photo = $_SESSION['user']['photo'];
-if (isset($_FILES['photo']) && $_FILES['photo']['error'] === 0) {
+$photoName = $user['photo'];
+
+if (!empty($_FILES['photo']['name'])) {
     $ext = pathinfo($_FILES['photo']['name'], PATHINFO_EXTENSION);
-    $newName = uniqid() . "." . $ext;
-    move_uploaded_file($_FILES['photo']['tmp_name'], "../uploads/" . $newName);
-    $photo = $newName;
+    $photoName = uniqid() . "." . $ext;
+    move_uploaded_file($_FILES['photo']['tmp_name'], "../uploads/" . $photoName);
 }
 
-$stmt = $pdo->prepare("UPDATE users SET name = ?, email = ?, photo = ? WHERE id = ?");
-$stmt->execute([$name, $email, $photo, $id]);
+// Actualizar en la base de datos
+$stmt = $pdo->prepare("UPDATE users SET name = ?, email = ?, last_name = ?, photo = ? WHERE id = ?");
+$stmt->execute([$name, $email, $lastName, $photoName, $user['id']]);
 
-// Actualiza sesión
+// Actualizar sesión
 $_SESSION['user']['name'] = $name;
 $_SESSION['user']['email'] = $email;
-$_SESSION['user']['photo'] = $photo;
+$_SESSION['user']['last_name'] = $lastName;
+$_SESSION['user']['photo'] = $photoName;
 
 header("Location: ../views/profile.php");
-exit;
-?>
+ob_end_flush();
